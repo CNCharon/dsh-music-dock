@@ -1991,7 +1991,15 @@ window.__ModuleLoader__.load({
 /* Compact volume slider inside the hover controls: 44px is still draggable
    without stealing the bar's width from the track title. */
 .mp-dock-volume { display: inline-flex; align-items: center; gap: 2px; margin: 0 2px; color: var(--dsw-alias-label-secondary, #767b86); }
-.mp-dock-volume input { width: 44px; accent-color: var(--dsw-alias-brand-primary, #4d6bfe); cursor: pointer; height: 14px; }
+.mp-dock-volume input { width: 44px; height: 12px; margin: 0; padding: 0; background: transparent; cursor: pointer;
+  -webkit-appearance: none; appearance: none; }
+/* A hairline track with a small thumb: still easy to grab, visually quiet. */
+.mp-dock-volume input::-webkit-slider-runnable-track { height: 2px; border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-2, rgba(16,18,24,.16)); }
+.mp-dock-volume input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 8px; height: 8px;
+  margin-top: -3px; border: 0; border-radius: 50%; background: var(--dsw-alias-brand-primary, #4d6bfe); }
+.mp-dock-volume input::-moz-range-track { height: 2px; border-radius: 999px; background: var(--dsw-alias-bg-layer-2, rgba(16,18,24,.16)); }
+.mp-dock-volume input::-moz-range-thumb { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--dsw-alias-brand-primary, #4d6bfe); }
 .mp-dock-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; overflow: hidden;
   background: var(--dsw-alias-bg-layer-2, rgba(16,18,24,.08)); }
 .mp-dock-progress-fill { height: 100%; background: var(--dsw-alias-brand-primary, #4d6bfe); transition: width .2s linear; }
