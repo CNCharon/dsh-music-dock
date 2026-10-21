@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Music Player",
-    "description": "Sign in to QQ Music or NetEase Cloud Music and sync every playlist you created or collected. The player sits in the sidebar footer and minimizes to four controls: previous, pause, next and play mode, with artist, title and lyrics."
+    "title": "Music Dock",
+    "description": "Sign in to QQ Music or NetEase Cloud Music and sync every playlist you created or collected. A compact dock in the sidebar footer shows the title and lyric line, and reveals transport, mode and volume controls on hover."
   },
   "settings": {
-    "section": "Music Player"
+    "section": "Music Dock"
   },
   "player": {
     "signIn": "Sign in",

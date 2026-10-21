@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-music-player',
+  id: 'dsh-music-dock',
   factory(require) {
     const React = require('react')
     const h = React.createElement
@@ -25,7 +25,7 @@ window.__ModuleLoader__.load({
      * i18n
      * ================================================================== */
 
-    const NS = 'dsh-music-player'
+    const NS = 'dsh-music-dock'
 
     const ZH = {
       signIn: '登录',
@@ -2168,7 +2168,7 @@ window.__ModuleLoader__.load({
     function installStyles() {
       if (styleEl && styleEl.isConnected) return
       styleEl = document.createElement('style')
-      styleEl.setAttribute('data-dsh-music-player', '')
+      styleEl.setAttribute('data-dsh-music-dock', '')
       styleEl.textContent = CSS
       document.head.appendChild(styleEl)
     }
@@ -2237,7 +2237,7 @@ window.__ModuleLoader__.load({
         // 56px rail) instead of hovering over the rest of the app.
         ctx.slots.inject('sidebar.footer.action', () =>
           ctx.slots.register(
-            { name: 'sidebar.footer.action', id: 'dsh-music-player', order: 30 },
+            { name: 'sidebar.footer.action', id: 'dsh-music-dock', order: 30 },
             MusicFooter,
           ),
         )
@@ -2246,7 +2246,7 @@ window.__ModuleLoader__.load({
         // inside the sidebar column would be covered by the conversation.
         ctx.slots.inject('shell.overlay', () =>
           ctx.slots.register(
-            { name: 'shell.overlay', id: 'dsh-music-player-overlay', order: 30 },
+            { name: 'shell.overlay', id: 'dsh-music-dock-overlay', order: 30 },
             MusicOverlay,
           ),
         )
@@ -2254,7 +2254,7 @@ window.__ModuleLoader__.load({
           ctx.slots.register(
             {
               name: 'settings.section',
-              id: 'dsh-music-player',
+              id: 'dsh-music-dock',
               order: 60,
               label: () => t('settingsTitle'),
             },

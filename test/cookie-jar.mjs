@@ -2,7 +2,7 @@ import fs from 'node:fs'
 
 // Pull the real collectCookies out of qr.js and run it on the exact shape the
 // ticket chain sends: a real value followed by a same-name deletion.
-const s = fs.readFileSync('E:/DeepSeek Harness/default-workspace/dsh-music-player/lib/qr.js', 'utf8')
+const s = fs.readFileSync('E:/DeepSeek Harness/default-workspace/dsh-music-dock/lib/qr.js', 'utf8')
 const body = s.match(/function collectCookies\(setCookie, into\) \{[\s\S]*?\n\}/)
 if (!body) throw new Error('collectCookies not found')
 const collectCookies = new Function(`${body[0]}; return collectCookies`)()

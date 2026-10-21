@@ -1,9 +1,9 @@
 {
-  "name": "dsh-music-player",
-  "version": "1.0.0",
+  "name": "dsh-music-dock",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
-  "description": "Music player for the DSH web GUI: sync personal playlists from QQ Music and NetEase Cloud Music, with a bottom-left player that shows lyrics when idle and controls on hover.",
+  "description": "A now-playing dock for the DSH sidebar: sync playlists from QQ Music and NetEase Cloud Music, show synced lyrics when idle and transport controls on hover.",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",

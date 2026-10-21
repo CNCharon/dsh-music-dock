@@ -1,16 +1,16 @@
-# 音乐播放器 · DSH Music Player
+# 音乐播放条 · DSH Music Dock
 
-一个嵌在 **左侧菜单栏底部** 的音乐播放器：接入 **网易云音乐 / QQ 音乐**，登录后同步你**收藏与创建的全部歌单**，支持上一首、暂停、下一首、播放模式（顺序 / 随机 / 单曲循环），并显示歌手、歌名与滚动歌词。
+一个嵌在 **左侧菜单栏底部** 的音乐播放条（Dock）：接入 **网易云音乐 / QQ 音乐**，登录后同步你**收藏与创建的全部歌单**，支持上一首、暂停、下一首、播放模式（顺序 / 随机 / 单曲循环），并显示歌手、歌名与滚动歌词。
 
 ## 安装
 
 尚未发布 NPM 包，用源码方式安装：
 
 ```bash
-dsh plugin --profile web add github:CNCharon/dsh-music-player
+dsh plugin --profile web add github:CNCharon/dsh-music-dock
 ```
 
-装好后重载插件（或在设置里关闭再开启「音乐播放器」），左侧栏底部就会出现播放条。要求 DSH 0.2.x，带 `webServer` 服务的 Web profile；Windows、macOS、Linux 均可。
+装好后重载插件（或在设置里关闭再开启「音乐播放条」），左侧栏底部就会出现播放条。要求 DSH 0.2.x，带 `webServer` 服务的 Web profile；Windows、macOS、Linux 均可。
 
 ## 功能
 
@@ -23,7 +23,7 @@ dsh plugin --profile web add github:CNCharon/dsh-music-player
   - QQ 音乐：扫码登录或粘贴 Cookie，同步创建歌单、收藏歌单与「我喜欢的音乐」；会员曲目按 `qm_keyst` 鉴权，播放地址走 `vkey` 接口。
 - **登录即同步**：登录成功立即拉取歌单；账号保存在本机，重启后自动恢复并后台刷新。
 - **歌词偏移**：`−0.5s / +0.5s` 按曲目记忆，解决歌词整体超前或滞后。
-- **设置页**：`设置 → 音乐播放器`，集中管理两个平台的登录与歌单浏览。
+- **设置页**：`设置 → 音乐播放条`，集中管理两个平台的登录与歌单浏览。
 
 ## 登录方式
 
@@ -58,7 +58,7 @@ dsh plugin --profile web add github:CNCharon/dsh-music-player
 ## 技术结构
 
 ```
-dsh-music-player/
+dsh-music-dock/
 ├─ index.js              Host 半：注册 /music/player 前缀路由
 ├─ lib/
 │  ├─ routes.js          同源 HTTP 接口 + 音频流转发（支持 Range）
@@ -101,7 +101,7 @@ node test/client-lint.mjs    # Client 静态检查（槽位、i18n、组件解�
 
 ## 数据与隐私
 
-- 账号 Cookie 只保存在 Host 进程与 `<profile>/.dsh-music-player/accounts.json`（仅 Cookie + 账号名，权限 0600）；
+- 账号 Cookie 只保存在 Host 进程与 `<profile>/.dsh-music-player/accounts.json`（仅 Cookie + 账号名，权限 0600；目录名沿用旧名，避免升级后丢失已有登录）；
 - 页面脚本无法读取 Cookie，所有平台请求都由 Host 转发；
 - 路由只接受同源请求。
 

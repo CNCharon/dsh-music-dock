@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-const s = fs.readFileSync('E:/DeepSeek Harness/default-workspace/dsh-music-player/lib/qr.js', 'utf8')
+const s = fs.readFileSync('E:/DeepSeek Harness/default-workspace/dsh-music-dock/lib/qr.js', 'utf8')
 const un = s.match(/function unescapeJs\(text\) \{[\s\S]*?\n\}/)
 const pr = s.match(/function pageRedirect\(html\) \{[\s\S]*?\n\}/)
 if (!un || !pr) throw new Error('helpers not found')
