@@ -1,6 +1,6 @@
 {
   "name": "dsh-music-dock",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": false,
   "type": "module",
   "description": "A now-playing dock for the DSH sidebar: sync playlists from QQ Music and NetEase Cloud Music, show synced lyrics when idle and transport controls on hover.",

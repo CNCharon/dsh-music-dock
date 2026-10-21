@@ -49,6 +49,11 @@ window.__ModuleLoader__.load({
       modeSingle: '单曲循环',
       modeHint: '播放模式：{mode}',
       noLyric: '暂无歌词',
+      updateAvailable: '有新版本 {latest}（当前 {current}）',
+      updateAction: '复制更新命令',
+      updateCopied: '已复制',
+      updateOpen: '查看发布页',
+      dismiss: '不再提示',
       vipTrack: '会员 / 付费曲目',
       freeTrack: '普通曲目',
       hoverHint: '移出播放器显示歌词，移入显示控制',
@@ -124,6 +129,11 @@ window.__ModuleLoader__.load({
       modeSingle: 'Repeat one',
       modeHint: 'Play mode: {mode}',
       noLyric: 'No lyrics',
+      updateAvailable: 'Version {latest} is available (you have {current})',
+      updateAction: 'Copy update command',
+      updateCopied: 'Copied',
+      updateOpen: 'Release page',
+      dismiss: 'Dismiss',
       vipTrack: 'Member / paid track',
       freeTrack: 'Standard track',
       hoverHint: 'Move the pointer away for lyrics, back for controls',
@@ -1873,10 +1883,72 @@ window.__ModuleLoader__.load({
     function SettingsSection() {
       useLocale()
       const store = useLibrary()
+      const [update, setUpdate] = useState(null)
+      const [hidden, setHidden] = useState(false)
+      const [copied, setCopied] = useState(false)
 
       useEffect(() => {
         lib.hydrate()
       }, [])
+
+      // A source install never learns about a newer tag on its own: ask the
+      // Host once when the settings page opens, and stay silent on failure.
+      useEffect(() => {
+        let live = true
+        apiGet('update')
+          .then((value) => {
+            if (live && value && value.available) setUpdate(value)
+          })
+          .catch(() => {})
+        return () => {
+          live = false
+        }
+      }, [])
+
+      const copyCommand = () => {
+        const text = update && update.command ? update.command : ''
+        if (!text) return
+        const done = () => {
+          setCopied(true)
+          setTimeout(() => setCopied(false), 1600)
+        }
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, done)
+            return
+          }
+        } catch {
+          /* fall through */
+        }
+        window.prompt(t('updateAction'), text)
+        done()
+      }
+
+      const updateBanner =
+        update && !hidden
+          ? h(
+              'div',
+              { className: 'mp-update' },
+              h(Icon, { name: 'up', size: 16, className: 'mp-update-icon' }),
+              h(
+                'div',
+                { className: 'mp-update-text' },
+                h('div', { className: 'mp-update-title' }, t('updateAvailable', { latest: update.latest, current: update.current })),
+                h('code', { className: 'mp-update-command' }, update.command),
+              ),
+              h(
+                'div',
+                { className: 'mp-update-actions' },
+                h('button', { type: 'button', className: 'mp-btn mp-btn-primary', onClick: copyCommand }, copied ? t('updateCopied') : t('updateAction')),
+                h(
+                  'a',
+                  { className: 'mp-btn mp-btn-ghost', href: update.url, target: '_blank', rel: 'noreferrer' },
+                  t('updateOpen'),
+                ),
+                h('button', { type: 'button', className: 'mp-btn mp-btn-ghost', onClick: () => setHidden(true) }, t('dismiss')),
+              ),
+            )
+          : null
 
       // The sign-in dialog is drawn from the overlay layer (above every column),
       // so the settings page only asks for it through the engine.
@@ -1926,6 +1998,7 @@ window.__ModuleLoader__.load({
         { className: 'mp-settings' },
         h('h2', { className: 'mp-settings-title' }, t('settingsTitle')),
         h('p', { className: 'mp-settings-intro' }, t('settingsIntro')),
+        updateBanner,
         h('div', { className: 'mp-cards' }, cards),
         h('div', { className: 'mp-settings-block' }, h(PlaylistBrowser, { compact: false })),
       )
@@ -2143,6 +2216,19 @@ window.__ModuleLoader__.load({
 .mp-settings { display: flex; flex-direction: column; gap: 10px; max-width: 760px; color: var(--dsw-alias-label-primary, #15171c); }
 .mp-settings-title { margin: 0; font-size: 15px; font-weight: 650; }
 .mp-settings-intro { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--dsw-alias-label-secondary, #767b86); }
+.mp-update { display: flex; align-items: flex-start; gap: 9px; flex-wrap: wrap;
+  border: 1px solid var(--dsw-alias-border-l1, rgba(16,18,24,.12));
+  background: var(--dsw-alias-bg-layer-2, rgba(16,18,24,.05));
+  border-radius: 12px; padding: 10px 12px; }
+.mp-update-icon { color: var(--dsw-alias-brand-primary, #4d6bfe); transform: rotate(180deg); }
+.mp-update-text { flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.mp-update-title { font-size: 12.5px; font-weight: 600; }
+.mp-update-command { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px;
+  color: var(--dsw-alias-label-secondary, #767b86); background: var(--dsw-alias-bg-layer-1, rgba(16,18,24,.06));
+  border-radius: 6px; padding: 4px 6px; overflow-x: auto; white-space: nowrap; }
+.mp-update-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mp-update-actions .mp-btn { padding: 5px 10px; font-size: 11.5px; text-decoration: none; }
+
 .mp-cards { display: flex; flex-direction: column; gap: 8px; }
 .mp-card { border: 1px solid var(--dsw-alias-border-l1, rgba(16,18,24,.10)); border-radius: 12px; padding: 11px 12px; display: flex; flex-direction: column; gap: 6px; background: var(--dsw-alias-bg-layer-1, rgba(16,18,24,.02)); }
 .mp-card-head { display: flex; align-items: center; gap: 10px; }

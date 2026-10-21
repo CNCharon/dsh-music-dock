@@ -12,6 +12,16 @@ dsh plugin --profile web add github:CNCharon/dsh-music-dock
 
 装好后重载插件（或在设置里关闭再开启「音乐播放条」），左侧栏底部就会出现播放条。要求 DSH 0.2.x，带 `webServer` 服务的 Web profile；Windows、macOS、Linux 均可。
 
+## 更新
+
+插件会在设置页检查新版本；发现更新时，按提示执行：
+
+```bash
+dsh plugin --profile web add github:CNCharon/dsh-music-dock
+```
+
+然后重启 DSH。账号与登录状态保存在本机 profile 目录，更新不会丢失。也可以随时关注 [Releases](https://github.com/CNCharon/dsh-music-dock/releases) 获取版本说明。
+
 ## 功能
 
 - **嵌在侧栏里**：播放器嵌在左侧栏底部、其他插件按钮的上方，宽度与侧栏内容对齐——侧栏变窄成 56px 导轨时，播放器退化为底栏里的一个按钮。
