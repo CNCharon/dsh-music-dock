@@ -1,7 +1,7 @@
 {
   "name": "dsh-music-dock",
   "version": "1.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "A now-playing dock for the DSH sidebar: sync playlists from QQ Music and NetEase Cloud Music, show synced lyrics when idle and transport controls on hover.",
   "exports": {
@@ -17,7 +17,8 @@
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dsh": {
     "bundle": {
@@ -30,5 +31,24 @@
         "@deepseek-ai/dsh-client-ui-slots"
       ]
     }
-  }
+  },
+  "main": "./index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CNCharon/dsh-music-dock.git"
+  },
+  "homepage": "https://github.com/CNCharon/dsh-music-dock#readme",
+  "bugs": {
+    "url": "https://github.com/CNCharon/dsh-music-dock/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "music",
+    "music-player",
+    "qq-music",
+    "netease-cloud-music"
+  ]
 }
