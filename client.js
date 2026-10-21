@@ -49,6 +49,8 @@ window.__ModuleLoader__.load({
       modeSingle: '单曲循环',
       modeHint: '播放模式：{mode}',
       noLyric: '暂无歌词',
+      vipTrack: '会员 / 付费曲目',
+      freeTrack: '普通曲目',
       hoverHint: '移出播放器显示歌词，移入显示控制',
       loadingSong: '正在获取播放地址…',
       notPlayable: '无法播放：{reason}',
@@ -57,6 +59,7 @@ window.__ModuleLoader__.load({
       qrTab: '扫码登录',
       cookieTab: 'Cookie 登录',
       qrWaiting: '打开 {app} 扫一扫',
+      qrWaitingQq: '打开 QQ 或微信扫一扫',
       qrScanned: '已扫码，请在手机上确认',
       qrExpired: '二维码已过期',
       qrRefresh: '刷新二维码',
@@ -121,6 +124,8 @@ window.__ModuleLoader__.load({
       modeSingle: 'Repeat one',
       modeHint: 'Play mode: {mode}',
       noLyric: 'No lyrics',
+      vipTrack: 'Member / paid track',
+      freeTrack: 'Standard track',
       hoverHint: 'Move the pointer away for lyrics, back for controls',
       loadingSong: 'Resolving the audio URL…',
       notPlayable: 'Cannot play: {reason}',
@@ -129,6 +134,7 @@ window.__ModuleLoader__.load({
       qrTab: 'Scan QR',
       cookieTab: 'Cookie',
       qrWaiting: 'Scan with {app}',
+      qrWaitingQq: 'Scan with QQ or WeChat',
       qrScanned: 'Scanned — confirm on your phone',
       qrExpired: 'The QR code expired',
       qrRefresh: 'Refresh QR code',
@@ -778,7 +784,7 @@ window.__ModuleLoader__.load({
 
     const PROVIDERS = [
       { id: 'netease', label: () => t('htm'), color: '#e5484d', qr: true, site: 'music.163.com' },
-      { id: 'qq', label: () => t('qq'), color: '#22c55e', qr: true, site: 'y.qq.com' },
+      { id: 'qq', label: () => t('qq'), color: '#22c55e', qr: true, site: 'y.qq.com', qrHint: 'qrWaitingQq' },
     ]
 
     function providerMeta(id) {
@@ -787,6 +793,11 @@ window.__ModuleLoader__.load({
 
     function providerName(id) {
       return providerMeta(id).label()
+    }
+
+    /** QQ's ticket is scanned by the QQ or WeChat app, not the QQ Music app. */
+    function qrWaitingText(provider) {
+      return provider.qrHint ? t(provider.qrHint) : t('qrWaiting', { app: providerName(provider.id) })
     }
 
     function helpFor(id) {
@@ -1069,12 +1080,12 @@ window.__ModuleLoader__.load({
           'div',
           { className: 'mp-qr-state' },
           qr && qr.image
-            ? h('img', { className: 'mp-qr-image', src: qr.image, alt: t('qrWaiting', { app: providerName(provider.id) }), width: 180, height: 180 })
+            ? h('img', { className: 'mp-qr-image', src: qr.image, alt: qrWaitingText(provider), width: 180, height: 180 })
             : h('div', { className: 'mp-qr-image mp-qr-placeholder' }, h(Spinner)),
           h(
             'div',
             { className: `mp-qr-hint${qrState === 'scanned' ? ' is-ok' : ''}` },
-            qrState === 'scanned' ? t('qrScanned') : t('qrWaiting', { app: providerName(provider.id) }),
+            qrState === 'scanned' ? t('qrScanned') : qrWaitingText(provider),
           ),
           h('div', { className: 'mp-qr-site' }, provider.site),
         )
@@ -1702,7 +1713,13 @@ window.__ModuleLoader__.load({
           h(
             'div',
             { className: 'mp-dock-title' },
-            h('span', { className: `mp-dock-dot${state.playing ? ' is-playing' : ''}` }),
+            // Red marks a member/paid track, blue an ordinary one; grey while
+            // nothing is loaded. This is the track's own pay flag, not the
+            // current playback state, so it survives pause.
+            h('span', {
+              className: `mp-dock-dot${track ? (track.vip ? ' is-vip' : ' is-free') : ''}`,
+              title: track ? (track.vip ? t('vipTrack') : t('freeTrack')) : '',
+            }),
             h('span', { className: 'mp-dock-name' }, title),
           ),
           h(
@@ -1942,7 +1959,8 @@ window.__ModuleLoader__.load({
 .mp-dock-title { display: flex; align-items: center; gap: 5px; min-width: 0; line-height: 16px; }
 .mp-dock-name { min-width: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mp-dock-dot { width: 5px; height: 5px; border-radius: 50%; flex: 0 0 auto; background: var(--dsw-alias-label-secondary, #767b86); opacity: .5; }
-.mp-dock-dot.is-playing { background: var(--dsw-alias-brand-primary, #4d6bfe); opacity: 1; }
+.mp-dock-dot.is-free { background: var(--dsw-alias-brand-primary, #4d6bfe); opacity: 1; }
+.mp-dock-dot.is-vip { background: var(--dsw-alias-state-error-primary, #d33b41); opacity: 1; }
 /* Both faces stay mounted and crossfade, so hovering never snaps the layout. */
 .mp-dock-swap { position: relative; height: 24px; min-width: 0; }
 .mp-dock-layer { position: absolute; inset: 0; display: flex; align-items: center; min-width: 0; border: 0; background: transparent;
