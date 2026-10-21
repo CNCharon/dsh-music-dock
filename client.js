@@ -1681,6 +1681,8 @@ window.__ModuleLoader__.load({
       const line = track ? currentLyric(state) || track.artist || track.album || t('noLyric') : t('signInHint')
       const modeIcon = state.mode === 'shuffle' ? 'shuffle' : state.mode === 'single' ? 'single' : 'order'
       const progress = state.duration ? Math.min(100, (state.time / state.duration) * 100) : 0
+      // Member/paid tracks red, ordinary tracks blue, nothing loaded grey.
+      const dotColor = track ? (track.vip ? '#e5484d' : '#4d6bfe') : '#9aa0aa'
 
       // Align with the sidebar's content box and pin just above its footer row.
       const footer = state.footerRect
@@ -1714,10 +1716,11 @@ window.__ModuleLoader__.load({
             'div',
             { className: 'mp-dock-title' },
             // Red marks a member/paid track, blue an ordinary one; grey while
-            // nothing is loaded. This is the track's own pay flag, not the
-            // current playback state, so it survives pause.
+            // nothing is loaded. Colours are inline on purpose: the sidebar's
+            // theme tokens made the "free" dot read as black.
             h('span', {
-              className: `mp-dock-dot${track ? (track.vip ? ' is-vip' : ' is-free') : ''}`,
+              className: 'mp-dock-dot',
+              style: { background: dotColor, opacity: track ? 1 : 0.55 },
               title: track ? (track.vip ? t('vipTrack') : t('freeTrack')) : '',
             }),
             h('span', { className: 'mp-dock-name' }, title),
@@ -1778,6 +1781,21 @@ window.__ModuleLoader__.load({
                   className: 'mp-mode-on',
                   onClick: () => engine.cycleMode(),
                 }),
+                h(
+                  'span',
+                  { className: 'mp-dock-volume' },
+                  h(Icon, { name: 'volume', size: 14 }),
+                  h('input', {
+                    type: 'range',
+                    min: 0,
+                    max: 1,
+                    step: 0.01,
+                    value: state.volume,
+                    'aria-label': t('volume'),
+                    title: t('volume'),
+                    onChange: (event) => engine.setVolume(Number(event.target.value)),
+                  }),
+                ),
                 h(IconButton, { name: 'up', label: t('expand'), size: 15, onClick: expand }),
               ),
             ),
@@ -1958,9 +1976,9 @@ window.__ModuleLoader__.load({
 .mp-dock-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .mp-dock-title { display: flex; align-items: center; gap: 5px; min-width: 0; line-height: 16px; }
 .mp-dock-name { min-width: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mp-dock-dot { width: 5px; height: 5px; border-radius: 50%; flex: 0 0 auto; background: var(--dsw-alias-label-secondary, #767b86); opacity: .5; }
-.mp-dock-dot.is-free { background: var(--dsw-alias-brand-primary, #4d6bfe); opacity: 1; }
-.mp-dock-dot.is-vip { background: var(--dsw-alias-state-error-primary, #d33b41); opacity: 1; }
+/* Colour is set inline from the track's tier (red = member/paid, blue =
+   standard); only geometry and the no-track fallback live here. */
+.mp-dock-dot { width: 6px; height: 6px; min-width: 6px; flex: 0 0 6px; border-radius: 50%; background: #9aa0aa; }
 /* Both faces stay mounted and crossfade, so hovering never snaps the layout. */
 .mp-dock-swap { position: relative; height: 24px; min-width: 0; }
 .mp-dock-layer { position: absolute; inset: 0; display: flex; align-items: center; min-width: 0; border: 0; background: transparent;
@@ -1970,6 +1988,10 @@ window.__ModuleLoader__.load({
   transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
 .mp-dock-lyric { display: block; font-size: 11px; line-height: 24px; color: var(--dsw-alias-label-secondary, #767b86);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; cursor: pointer; }
+/* Compact volume slider inside the hover controls: 44px is still draggable
+   without stealing the bar's width from the track title. */
+.mp-dock-volume { display: inline-flex; align-items: center; gap: 2px; margin: 0 2px; color: var(--dsw-alias-label-secondary, #767b86); }
+.mp-dock-volume input { width: 44px; accent-color: var(--dsw-alias-brand-primary, #4d6bfe); cursor: pointer; height: 14px; }
 .mp-dock-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; overflow: hidden;
   background: var(--dsw-alias-bg-layer-2, rgba(16,18,24,.08)); }
 .mp-dock-progress-fill { height: 100%; background: var(--dsw-alias-brand-primary, #4d6bfe); transition: width .2s linear; }
