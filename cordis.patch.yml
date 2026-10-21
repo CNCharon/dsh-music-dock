@@ -1,0 +1,3 @@
+- insert:
+    - id: music-player
+      name: 'dsh-music-player'

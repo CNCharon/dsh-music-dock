@@ -1,0 +1,34 @@
+{
+  "name": "dsh-music-player",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Music player for the DSH web GUI: sync personal playlists from QQ Music and NetEase Cloud Music, with a bottom-left player that shows lyrics when idle and controls on hover.",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/**/*.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  }
+}

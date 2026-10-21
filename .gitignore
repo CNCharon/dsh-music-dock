@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# Local experiment: an unused, obfuscated QQ signing bundle that is not part of
+# the plugin (the QR flow exchanges an OAuth code instead).
+lib/vendor/qq-sign.cjs
