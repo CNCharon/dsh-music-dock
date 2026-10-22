@@ -1,4 +1,4 @@
-# 音乐播放条 · DSH Music Dock
+# 音乐播放条 · DSH Music Dock [![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/cncharon/dsh-music-dock)
 
 一个嵌在 **左侧菜单栏底部** 的音乐播放条（Dock）：接入 **网易云音乐 / QQ 音乐**，登录后同步你**收藏与创建的全部歌单**，支持上一首、暂停、下一首、播放模式（顺序 / 随机 / 单曲循环），并显示歌手、歌名与滚动歌词。
 
